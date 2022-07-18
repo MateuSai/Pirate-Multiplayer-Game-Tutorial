@@ -17,6 +17,10 @@ onready var animation_player: AnimationPlayer = get_node("AnimationPlayer")
 onready var hitbox_col: CollisionShape2D = get_node("Hitbox/CollisionShape2D")
 
 
+func _ready() -> void:
+	state_machine.set_state(state_machine.IDLE)
+
+
 func _get_input() -> void:
 	dir = Input.get_axis("ui_left", "ui_right")
 	if dir != 0:
@@ -24,8 +28,16 @@ func _get_input() -> void:
 			_flip()
 		velocity.x = lerp(velocity.x, dir * speed, ACCELERATION)
 		
-	if Input.is_action_just_pressed("ui_jump") and is_on_floor():
-		velocity.y = jump_impulse
+	if Input.is_action_just_pressed("ui_jump") and Input.is_action_pressed("ui_down"):
+		set_collision_mask_bit(1, false)
+	elif Input.is_action_just_pressed("ui_jump") and is_on_floor():
+			velocity.y = jump_impulse
+			
+	if Input.is_action_just_released("ui_jump") and not get_collision_mask_bit(1):
+		set_collision_mask_bit(1, true)
+		
+	if Input.is_action_just_pressed("ui_attack"):
+		state_machine.set_state(state_machine.ATTACK)
 		
 		
 func _physics_process(delta: float) -> void:
