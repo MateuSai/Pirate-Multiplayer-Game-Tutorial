@@ -21,7 +21,12 @@ _global_script_class_icons={
 [application]
 
 config/name="Pirate Multyplayer Game Tutorial"
+run/main_scene="res://Menu.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Client="*res://autoloads/Client.gd"
 
 [display]
 

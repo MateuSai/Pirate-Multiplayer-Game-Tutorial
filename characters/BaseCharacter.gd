@@ -7,22 +7,22 @@ onready var sprite: Sprite = get_node("Sprite")
 
 
 func damage(dam: int) -> void:
-	self.hp -= dam
-	
-	
+    self.hp -= dam
+    
+    
 func enable_hitbox() -> void:
-	pass
-	
-	
+    pass
+    
+    
 func disable_hitbox() -> void:
-	pass
+    pass
 
 
 func die() -> void:
-	pass
+    pass
 
 
 func set_hp(new_hp: int) -> void:
-	hp = new_hp
-	if hp <= 0:
-		die()
+    hp = new_hp
+    if hp <= 0:
+        die()
