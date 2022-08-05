@@ -35,12 +35,24 @@ func connect_to_server(room_id: int = 0) -> void:
         printerr("Failed to connect connection_failed")
     if get_tree().connect("server_disconnected", self, "_server_disconnected"):
         printerr("Failed to connect server_diconnected")
+        
+        
+func stop() -> void:
+    print("Disconnecting from server")
+    
+    get_tree().disconnect("connected_to_server", self, "_connected_ok")
+    get_tree().disconnect("connection_failed", self, "_connected_fail")
+    get_tree().disconnect("server_disconnected", self, "_server_disconnected")
+    
+    get_tree().network_peer = null
 
 
 func _connected_ok() -> void:
     print("Connected to server!")
     if is_creator:
         rpc_id(1, "create_room", my_info)
+    else:
+        rpc_id(1, "join_room", room, my_info)
     
     
 func _connected_fail() -> void:
