@@ -45,6 +45,26 @@ func stop() -> void:
     get_tree().disconnect("server_disconnected", self, "_server_disconnected")
     
     get_tree().network_peer = null
+    
+    _remove_all_players()
+    
+    
+remote func register_player(id: int, info: Dictionary) -> void:
+    player_info[id] = info
+    get_tree().current_scene.add_player_to_ui(info.name)
+    
+    
+remote func remove_player(id: int) -> void:
+    get_tree().current_scene.remove_player(player_info.keys().find(id))
+    
+    if not player_info.erase(id):
+        printerr("Error removing player from dictionary")
+        
+        
+func _remove_all_players() -> void:
+    get_tree().current_scene.remove_all_players()
+    
+    player_info = {}
 
 
 func _connected_ok() -> void:

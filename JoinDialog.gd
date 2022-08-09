@@ -21,3 +21,8 @@ func connected_ok() -> void:
     connect_button.disabled = false
     
     wait_container.show()
+
+
+func _on_JoinDialog_popup_hide() -> void:
+    wait_container.hide()
+    connect_container.show()

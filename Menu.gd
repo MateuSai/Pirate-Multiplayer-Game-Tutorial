@@ -30,3 +30,26 @@ func _on_JoinButton_pressed() -> void:
 func _on_popup_hide() -> void:
     if get_tree().network_peer != null:
         Client.stop()
+
+
+func add_player_to_ui(name: String) -> void:
+    if Client.is_creator:
+        create_dialog_player_list.add_player(name)
+    else:
+        join_player_list.add_player(name)
+        
+        
+func remove_player(index: int) -> void:
+    if Client.is_creator:
+        create_dialog_player_list.remove_player(index)
+    else:
+        join_player_list.remove_player(index)
+
+
+func remove_all_players() -> void:
+    if Client.is_creator:
+        create_dialog_player_list.remove_all()
+        create_dialog.hide()
+    else:
+        join_player_list.remove_all()
+        join_dialog.hide()

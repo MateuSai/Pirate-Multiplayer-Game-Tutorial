@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Menu.gd" type="Script" id=1]
 [ext_resource path="res://JoinDialog.gd" type="Script" id=2]
+[ext_resource path="res://PlayerList.gd" type="Script" id=3]
 
 [node name="Menu" type="Control"]
 anchor_right = 1.0
@@ -50,6 +51,7 @@ margin_bottom = 14.0
 text = "Loading..."
 
 [node name="PlayerList" type="VBoxContainer" parent="CreateDialog/ScrollContainer/VBoxContainer"]
+script = ExtResource( 3 )
 
 [node name="JoinDialog" type="WindowDialog" parent="."]
 visible = true
@@ -96,8 +98,11 @@ margin_bottom = 14.0
 [node name="PlayerList" type="VBoxContainer" parent="JoinDialog/WaitScrollContainer/VBoxContainer"]
 margin_top = 18.0
 margin_bottom = 18.0
+script = ExtResource( 3 )
 
 [connection signal="pressed" from="VBoxContainer/CreateButton" to="." method="_on_CreateButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/JoinButton" to="." method="_on_JoinButton_pressed"]
 [connection signal="popup_hide" from="CreateDialog" to="." method="_on_popup_hide"]
+[connection signal="popup_hide" from="JoinDialog" to="." method="_on_popup_hide"]
+[connection signal="popup_hide" from="JoinDialog" to="JoinDialog" method="_on_JoinDialog_popup_hide"]
 [connection signal="pressed" from="JoinDialog/ConnectVBoxContainer/ConnectButton" to="JoinDialog" method="_on_ConnectButton_pressed"]
