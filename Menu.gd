@@ -1,5 +1,7 @@
 extends Control
 
+var game_started: bool = false
+
 
 onready var create_dialog: AcceptDialog = get_node("CreateDialog")
 onready var create_dialog_label: Label = create_dialog.get_node("ScrollContainer/VBoxContainer/Label")
@@ -28,7 +30,7 @@ func _on_JoinButton_pressed() -> void:
 
 
 func _on_popup_hide() -> void:
-    if get_tree().network_peer != null:
+    if not game_started and get_tree().network_peer != null:
         Client.stop()
 
 
@@ -53,3 +55,7 @@ func remove_all_players() -> void:
     else:
         join_player_list.remove_all()
         join_dialog.hide()
+
+
+func _on_CreateDialog_confirmed() -> void:
+    Client.start_game()

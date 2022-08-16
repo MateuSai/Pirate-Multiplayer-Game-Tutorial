@@ -29,11 +29,11 @@ func connect_to_server(room_id: int = 0) -> void:
         printerr("Error creating the client")
     get_tree().network_peer = peer
     
-    if get_tree().connect("connected_to_server", self, "_connected_ok"):
+    if get_tree().connect("connected_to_server", self, "_connected_ok", [], CONNECT_DEFERRED):
         printerr("Failed to connect connected_server")
-    if get_tree().connect("connection_failed", self, "_connected_fail"):
+    if get_tree().connect("connection_failed", self, "_connected_fail", [], CONNECT_DEFERRED):
         printerr("Failed to connect connection_failed")
-    if get_tree().connect("server_disconnected", self, "_server_disconnected"):
+    if get_tree().connect("server_disconnected", self, "_server_disconnected", [], CONNECT_DEFERRED):
         printerr("Failed to connect server_diconnected")
         
         
@@ -54,15 +54,60 @@ remote func register_player(id: int, info: Dictionary) -> void:
     get_tree().current_scene.add_player_to_ui(info.name)
     
     
+func start_game() -> void:
+    rpc_id(1, "start_game")
+    
+    
+remote func pre_configure_game() -> void:
+    print("pre_configure_game called")
+    
+    # Avoids closing the server when the popup_hide signal of the popups is sent
+    get_tree().current_scene.set_deferred("game_started", true)
+    
+    get_tree().paused = true
+    
+    get_tree().current_scene.queue_free()
+    var game: Node2D = preload("res://Game.tscn").instance()
+    get_tree().root.add_child(game)
+    get_tree().current_scene = game
+    
+    var my_player: KinematicBody2D = preload("res://characters/Player.tscn").instance()
+    game.add_child(my_player)
+    player_info[get_tree().get_network_unique_id()].instance = my_player
+    
+    for player_id in player_info:
+        if player_id != get_tree().get_network_unique_id():
+            var player: KinematicBody2D = preload("res://characters/BaseCharacter.tscn").instance()
+            game.add_child(player)
+            player_info[player_id].instance = player
+            
+    rpc_id(1, "done_preconfiguring")
+    
+    
+remote func done_preconfiguring() -> void:
+    get_tree().paused = false
+    
+    
 remote func remove_player(id: int) -> void:
-    get_tree().current_scene.remove_player(player_info.keys().find(id))
+    if get_tree().current_scene.name == "Menu":
+        # Remove it from the UI
+        get_tree().current_scene.remove_player(player_info.keys().find(id))
+    else:
+        # Remove his instance from the game
+        player_info[id].instance.queue_free()
     
     if not player_info.erase(id):
         printerr("Error removing player from dictionary")
         
         
 func _remove_all_players() -> void:
-    get_tree().current_scene.remove_all_players()
+    if get_tree().current_scene.name == "Menu":
+        # Remove all players from the UI
+        get_tree().current_scene.remove_all_players()
+    else:
+        # We are in game, remove all player instances
+        for player_id in player_info:
+            player_info[player_id].instance.queue_free()
     
     player_info = {}
 
@@ -81,6 +126,7 @@ func _connected_fail() -> void:
     
 func _server_disconnected() -> void:
     print("Server disconnected!")
+    stop()
 
 
 remote func update_room(room_id: int) -> void:

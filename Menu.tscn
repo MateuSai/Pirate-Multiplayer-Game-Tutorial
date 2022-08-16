@@ -33,6 +33,7 @@ margin_right = 228.0
 margin_bottom = 125.0
 popup_exclusive = true
 window_title = "Waiting for players..."
+dialog_hide_on_ok = false
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CreateDialog"]
 margin_left = 8.0
@@ -102,6 +103,7 @@ script = ExtResource( 3 )
 
 [connection signal="pressed" from="VBoxContainer/CreateButton" to="." method="_on_CreateButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/JoinButton" to="." method="_on_JoinButton_pressed"]
+[connection signal="confirmed" from="CreateDialog" to="." method="_on_CreateDialog_confirmed"]
 [connection signal="popup_hide" from="CreateDialog" to="." method="_on_popup_hide"]
 [connection signal="popup_hide" from="JoinDialog" to="." method="_on_popup_hide"]
 [connection signal="popup_hide" from="JoinDialog" to="JoinDialog" method="_on_JoinDialog_popup_hide"]
