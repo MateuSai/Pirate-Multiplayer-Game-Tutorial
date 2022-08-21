@@ -12,8 +12,11 @@ var velocity: Vector2 = Vector2.ZERO
 
 var can_move: bool = true setget set_can_move
 
+signal position_changed(new_pos)
+signal flip_h_changed(flip_h)
+signal animation_changed(anim_name)
+
 onready var state_machine: Node = get_node("StateMachine")
-onready var animation_player: AnimationPlayer = get_node("AnimationPlayer")
 onready var hitbox_col: CollisionShape2D = get_node("Hitbox/CollisionShape2D")
 
 
@@ -48,11 +51,14 @@ func _physics_process(delta: float) -> void:
     velocity = move_and_slide(velocity, Vector2.UP)
     if dir == 0:
         velocity.x = lerp(velocity.x, 0, FRICTION)
+        
+    emit_signal("position_changed", position)
 
 
 func _flip() -> void:
     sprite.flip_h = not sprite.flip_h
     hitbox_col.position.x *= -1
+    emit_signal("flip_h_changed", sprite.flip_h)
 
 
 func enable_hitbox() -> void:
@@ -67,3 +73,7 @@ func set_can_move(new_value: bool) -> void:
     can_move = new_value
     if not can_move:
         dir = 0.0
+
+
+func _on_AnimationPlayer_animation_started(anim_name: String) -> void:
+    emit_signal("animation_changed", anim_name)

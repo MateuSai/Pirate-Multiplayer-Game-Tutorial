@@ -75,6 +75,13 @@ remote func pre_configure_game() -> void:
     game.add_child(my_player)
     player_info[get_tree().get_network_unique_id()].instance = my_player
     
+    if my_player.connect("position_changed", self, "_on_position_changed"):
+        printerr("Error connecting position_changed signal")
+    if my_player.connect("flip_h_changed", self, "_on_flip_h_changed"):
+        printerr("Error connecting flip_h_changed signal")
+    if my_player.connect("animation_changed", self, "_on_animation_changed"):
+        printerr("Error connecting animation_changed signal")
+    
     for player_id in player_info:
         if player_id != get_tree().get_network_unique_id():
             var player: KinematicBody2D = preload("res://characters/BaseCharacter.tscn").instance()
@@ -86,6 +93,30 @@ remote func pre_configure_game() -> void:
     
 remote func done_preconfiguring() -> void:
     get_tree().paused = false
+    
+    
+func _on_position_changed(new_pos: Vector2) -> void:
+    rpc_unreliable_id(1, "change_player_pos", new_pos)
+    
+    
+func _on_flip_h_changed(flip_h: bool) -> void:
+    rpc_id(1, "change_player_flip_h", flip_h)
+    
+    
+func _on_animation_changed(anim_name: String) -> void:
+    rpc_id(1, "change_player_anim", anim_name)
+    
+    
+remote func update_player_pos(id: int, pos: Vector2) -> void:
+    player_info[id].instance.position = pos
+    
+    
+remote func update_player_flip_h(id: int, flip_h: bool) -> void:
+    player_info[id].instance.sprite.flip_h = flip_h
+    
+    
+remote func update_player_anim(id: int, anim_name: String) -> void:
+    player_info[id].instance.animation_player.play(anim_name)
     
     
 remote func remove_player(id: int) -> void:

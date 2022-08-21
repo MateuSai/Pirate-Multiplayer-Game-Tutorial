@@ -26,3 +26,4 @@ rotation = 1.5708
 shape = SubResource( 1 )
 
 [connection signal="body_entered" from="Hitbox" to="Hitbox" method="_on_Hitbox_body_entered"]
+[connection signal="animation_started" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_started"]
