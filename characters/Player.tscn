@@ -25,5 +25,9 @@ position = Vector2( 2, 0 )
 rotation = 1.5708
 shape = SubResource( 1 )
 
+[node name="ReviveTimer" type="Timer" parent="." index="6"]
+wait_time = 7.0
+one_shot = true
+
 [connection signal="body_entered" from="Hitbox" to="Hitbox" method="_on_Hitbox_body_entered"]
 [connection signal="animation_started" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_started"]
