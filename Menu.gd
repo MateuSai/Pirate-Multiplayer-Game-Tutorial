@@ -11,6 +11,8 @@ onready var join_dialog: WindowDialog = get_node("JoinDialog")
 onready var join_room_label: Label = join_dialog.get_node("WaitScrollContainer/VBoxContainer/Label")
 onready var join_player_list: VBoxContainer = join_dialog.get_node("WaitScrollContainer/VBoxContainer/PlayerList")
 
+onready var character_selector: WindowDialog = get_node("CharacterSelector")
+
 
 func update_room(room_id: int) -> void:
 	if Client.is_creator:
@@ -59,3 +61,7 @@ func remove_all_players() -> void:
 
 func _on_CreateDialog_confirmed() -> void:
 	Client.start_game()
+
+
+func _on_CharacterSelectorButton_pressed() -> void:
+	character_selector.popup_centered()

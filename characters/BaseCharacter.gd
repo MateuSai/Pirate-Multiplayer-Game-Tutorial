@@ -12,6 +12,9 @@ func initialize(id: int, name: String, character_index: int) -> void:
 	self.name = str(id)
 	
 	name_label.text = name
+	
+	var character_height: float = sprite.texture.get_height() / 4.0
+	sprite.region_rect = Rect2(0, character_height * character_index, sprite.texture.get_width(), character_height)
 
 
 func damage(dam: int) -> void:
