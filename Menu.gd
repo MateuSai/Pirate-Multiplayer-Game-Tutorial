@@ -2,6 +2,8 @@ extends Control
 
 var game_started: bool = false
 
+var keep_join_dialog_open: bool = false
+
 
 onready var create_dialog: AcceptDialog = get_node("CreateDialog")
 onready var create_dialog_label: Label = create_dialog.get_node("ScrollContainer/VBoxContainer/Label")
@@ -56,7 +58,10 @@ func remove_all_players() -> void:
 		create_dialog.hide()
 	else:
 		join_player_list.remove_all()
-		join_dialog.hide()
+		if keep_join_dialog_open:
+			keep_join_dialog_open = false
+		else:
+			join_dialog.hide()
 
 
 func _on_CreateDialog_confirmed() -> void:

@@ -21,6 +21,11 @@ func connected_ok() -> void:
 	connect_button.disabled = false
 	
 	wait_container.show()
+	
+	
+func show_error(msg: String) -> void:
+	error_label.text = msg
+	error_label.show()
 
 
 func _on_JoinDialog_popup_hide() -> void:

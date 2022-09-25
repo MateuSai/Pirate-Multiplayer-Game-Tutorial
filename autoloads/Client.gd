@@ -131,6 +131,11 @@ remote func damage(dam: int) -> void:
 	player_info[get_tree().get_network_unique_id()].instance.damage(dam)
 	
 	
+remote func show_error(msg: String) -> void:
+	get_tree().current_scene.keep_join_dialog_open = true
+	get_tree().current_scene.join_dialog.show_error(msg)
+	
+	
 remote func remove_player(id: int) -> void:
 	if get_tree().current_scene.name == "Menu":
 		# Remove it from the UI
